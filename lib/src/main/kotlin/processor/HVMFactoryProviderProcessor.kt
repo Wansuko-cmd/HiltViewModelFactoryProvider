@@ -1,6 +1,6 @@
 package processor
 
-import annotation.AnnotateProvideFactory
+import annotation.AnnotateViewModelFactory
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
@@ -14,7 +14,7 @@ class HVMFactoryProviderProcessor(
     private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val assisted = resolver.getSymbolsWithAnnotation(AnnotateProvideFactory::class.java.name)
+        val assisted = resolver.getSymbolsWithAnnotation(AnnotateViewModelFactory::class.java.name)
         val (valid, invalid) = assisted
             .filter { it is KSClassDeclaration }
             .partition { it.validate() }

@@ -1,12 +1,12 @@
 package com.wsr.normal
 
 import androidx.lifecycle.ViewModel
-import annotation.AnnotateProvideFactory
+import annotation.AnnotateViewModelFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-@AnnotateProvideFactory
+@AnnotateViewModelFactory
 class NormalViewModel @Inject constructor() : ViewModel() {
     val text = "Normal"
 }
