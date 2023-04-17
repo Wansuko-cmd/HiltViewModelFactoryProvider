@@ -10,5 +10,7 @@ class HVMFactoryProviderProcessorProvider : SymbolProcessorProvider {
     ): SymbolProcessor =
         HVMFactoryProviderProcessor(
             codeGenerator = environment.codeGenerator,
+            logger = environment.logger,
+            options = environment.options,
         )
 }

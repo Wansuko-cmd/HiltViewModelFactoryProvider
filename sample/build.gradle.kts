@@ -46,6 +46,10 @@ android {
     }
 }
 
+ksp {
+    arg("assign", "annotated")
+}
+
 dependencies {
 
     ksp(project(":lib"))

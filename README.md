@@ -37,3 +37,17 @@ class SampleActivity : ComponentActivity() {
     }
 }
 ```
+## オプション
+
+```kotlin
+ksp {
+    arg("assign", "annotated")
+}
+```
+
+### assign
+
+Default: annotated
+
+annotated -> `@AnnotateViewModelFactory`のついたViewModelに対して生成
+all -> 全ての`ViewModel`に対して生成
