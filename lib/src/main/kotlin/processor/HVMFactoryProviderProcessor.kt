@@ -4,6 +4,7 @@ import annotation.AssistedHiltViewModel
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
+import ext.isAssisted
 import processor.HVMFactoryProviderProcessor.AssistedParameter.Companion.toArgument
 import processor.HVMFactoryProviderProcessor.AssistedParameter.Companion.toArgumentWithAssisted
 import processor.HVMFactoryProviderProcessor.AssistedParameter.Companion.toName
@@ -37,8 +38,11 @@ class HVMFactoryProviderProcessor(
     ) {
         val file = viewModel.containingFile!!
         val viewModelName = viewModel.simpleName.asString()
-        val code = if (parameter.isEmpty()) generateNormalViewModelFactoryCode(viewModelName, file)
-        else generateAssistedViewModelFactoryCode(viewModelName, file, parameter)
+        val code = if (parameter.isEmpty()) {
+            generateNormalViewModelFactoryCode(viewModelName, file)
+        } else {
+            generateAssistedViewModelFactoryCode(viewModelName, file, parameter)
+        }
 
         codeGenerator.createNewFile(
             Dependencies(false, file),
@@ -58,7 +62,7 @@ class HVMFactoryProviderProcessor(
 
         @Composable
         fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = hiltViewModel()
-        """.trimIndent()
+    """.trimIndent()
 
     private fun generateAssistedViewModelFactoryCode(
         viewModelName: String,
@@ -142,7 +146,3 @@ class HVMFactoryProviderProcessor(
         }
     }
 }
-
-private fun KSAnnotation.isAssisted() =
-    annotationType.resolve().declaration.packageName.asString() == "dagger.assisted" &&
-            shortName.asString() == "Assisted"
