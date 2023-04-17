@@ -1,4 +1,4 @@
-package ext
+package processor.ext
 
 import com.google.devtools.ksp.symbol.KSAnnotation
 
