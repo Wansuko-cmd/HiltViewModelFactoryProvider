@@ -1,10 +1,11 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id("com.android.application") version "7.4.0"
-    id("org.jetbrains.kotlin.android") version "1.8.0"
-    id("com.google.devtools.ksp") version "1.8.0-1.0.9"
+    kotlin("android") version "1.8.0"
     kotlin("kapt") version "1.8.0"
+    id("com.android.application") version "7.4.0"
+    id("com.google.devtools.ksp") version "1.8.0-1.0.9"
+    id("com.google.dagger.hilt.android") version "2.44.2"
 }
 
 android {
@@ -13,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "HiltViewModelFactoryProvider.com.wsr.sample"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
