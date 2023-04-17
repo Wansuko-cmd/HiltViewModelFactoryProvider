@@ -1,7 +1,6 @@
 package processor.factory
 
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSValueParameter
 import processor.ext.isAssisted
 
 internal fun generateViewModelFactoryProvider(
@@ -21,30 +20,3 @@ internal fun generateViewModelFactoryProvider(
         generateAssistedViewModelCodeFactory(viewModelName, file, parameter)
     }
 }
-
-internal data class AssistedParameter(
-    val value: String,
-    val name: String,
-    val type: String,
-) {
-    companion object {
-        fun create(parameter: KSValueParameter) = AssistedParameter(
-            value = parameter
-                .annotations
-                .first { it.isAssisted() }
-                .arguments[0].value.toString(),
-            name = parameter.name!!.getShortName(),
-            type = parameter.type.toString(),
-        )
-
-        fun List<AssistedParameter>.toArgument() = this
-            .joinToString(", ") { "${it.name}: ${it.type}" }
-
-        fun List<AssistedParameter>.toArgumentWithAssisted() = this
-            .joinToString(", ") { "@Assisted(\"${it.value}\") ${it.name}: ${it.type}" }
-
-        fun List<AssistedParameter>.toName() = this
-            .joinToString(", ") { it.name }
-    }
-}
-
