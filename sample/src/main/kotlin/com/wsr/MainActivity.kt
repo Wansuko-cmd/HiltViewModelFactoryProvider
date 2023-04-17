@@ -15,11 +15,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val normalViewModel = normalViewModel()
-            val assistedViewModel = assistedViewModel(text = "Assisted")
+            val assistedViewModel = assistedViewModel(text = "Assisted", boo = 2)
 
             Column {
                 Text(normalViewModel.text)
-                Text(assistedViewModel.text)
+                Text(assistedViewModel.text + assistedViewModel.boo)
             }
         }
     }

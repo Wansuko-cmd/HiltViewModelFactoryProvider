@@ -16,7 +16,7 @@ internal fun generateAssistedViewModelCodeFactory(
 
     return """
             package ${file.packageName.asString()}
-            
+
             import android.app.Activity
             import androidx.compose.runtime.Composable
             import androidx.compose.ui.platform.LocalContext
@@ -58,8 +58,9 @@ internal fun generateAssistedViewModelCodeFactory(
                 ${assistedParameter.toArgument()},
             ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                    assistedFactory.create(text) as T
+                    assistedFactory.create(${assistedParameter.toName()}) as T
             }
+
     """.trimIndent()
 }
 
