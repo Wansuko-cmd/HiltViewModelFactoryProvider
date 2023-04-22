@@ -16,11 +16,11 @@ class HVMFactoryProviderProcessor(
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val assisted = resolver.getSymbolsWithAnnotation(AnnotateViewModelFactory::class.java.name)
         val (valid, invalid) = assisted
-            .filter { it is KSClassDeclaration }
+            .filterIsInstance<KSClassDeclaration>()
             .partition { it.validate() }
 
         valid.forEach { viewModel ->
-            val code = generateViewModelFactoryProvider(viewModel as KSClassDeclaration)
+            val code = generateViewModelFactoryProvider(viewModel)
             codeGenerator.createNewFile(
                 Dependencies(false, viewModel.containingFile!!),
                 viewModel.containingFile!!.packageName.asString(),
