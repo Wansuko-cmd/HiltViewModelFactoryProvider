@@ -18,5 +18,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "HiltViewModelFactoryProvider"
-include(":lib")
+include(":annotation")
+include(":processor")
 include(":sample")
