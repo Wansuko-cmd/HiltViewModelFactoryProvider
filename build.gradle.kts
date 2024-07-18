@@ -2,10 +2,6 @@ plugins {
     id("maven-publish")
 }
 
-task<Delete>("clean") {
-    delete(rootProject.buildDir)
-}
-
 subprojects {
     apply(plugin = "maven-publish")
 }
@@ -13,15 +9,15 @@ subprojects {
 publishing {
     publications {
         create<MavenPublication>("processor") {
-            groupId = "io.github.bugdog24"
+            groupId = libs.versions.lib.group.id.get()
             artifactId = "hilt-view-model-factory-provider-processor"
-            version = "0.0.1-alpha1"
+            version = libs.versions.lib.version.get()
         }
 
         create<MavenPublication>("annotation") {
-            groupId = "io.github.bugdog24"
+            groupId = libs.versions.lib.group.id.get()
             artifactId = "hilt-view-model-factory-provider-annotation"
-            version = "0.0.1-alpha1"
+            version = libs.versions.lib.version.get()
         }
     }
 }

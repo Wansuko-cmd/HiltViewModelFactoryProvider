@@ -1,11 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    kotlin("android") version "1.9.24"
-    kotlin("kapt") version "1.8.0"
-    id("com.android.application") version "7.4.2"
-    id("com.google.devtools.ksp") version "1.9.24-1.0.20"
-    id("com.google.dagger.hilt.android") version "2.44.2"
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -30,11 +29,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -42,7 +38,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion =  libs.versions.androidx.compose.compiler.get()
     }
 }
 
@@ -50,16 +46,14 @@ dependencies {
     ksp(project(":processor"))
     implementation(project(":annotation"))
 
-    implementation("androidx.core:core-ktx:1.13.1")
+    implementation(libs.androidx.core)
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-core")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.androidx.compose)
+    implementation(libs.hilt.navigation.compose)
 
     // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }

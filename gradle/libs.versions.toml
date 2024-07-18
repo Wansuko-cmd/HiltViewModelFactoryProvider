@@ -1,0 +1,63 @@
+[versions]
+# Library Info
+lib-group-id = "io.github.bugdog24"
+lib-version = "0.0.1-alpha1"
+
+# Kotlin
+kotlin = "1.9.24"
+
+# Gradle
+gradle-android = "8.4.2"
+
+# KSP
+ksp = "1.9.24-1.0.20"
+
+# SDK
+android-compileSdk = "34"
+android-minSdk = "24"
+android-targetSdk = "34"
+
+# AndroidX
+androidx = "1.13.1"
+
+# Androidx Compose
+androidx-compose-bom = "2024.06.00"
+androidx-compose-compiler = "1.5.14"
+
+# Hilt
+hilt-android = "2.51.1"
+hilt-navigation-compose = "1.2.0"
+
+[libraries]
+# KSP
+ksp-symbol-processing = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+
+# AndroidX
+androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx" }
+
+# Compose
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidx-compose-bom" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "androidx-compose-compiler" }
+
+# Hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-android" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt-android" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+
+[bundles]
+androidx-compose = [
+    "androidx-compose-ui",
+    "androidx-compose-icons-core",
+    "androidx-compose-material3",
+    "androidx-compose-compiler",
+]
+
+[plugins]
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "gradle-android" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }

@@ -1,3 +1,3 @@
 plugins {
-    kotlin("jvm") version "1.9.24"
+    alias(libs.plugins.jetbrains.kotlin.jvm)
 }
