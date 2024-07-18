@@ -4,9 +4,9 @@ plugins {
 
 publishing {
     publications {
-        create<MavenPublication>("processor") {
+        create<MavenPublication>("annotation") {
             groupId = libs.versions.lib.group.id.get()
-            artifactId = "hilt-view-model-factory-provider-processor"
+            artifactId = "hilt-view-model-factory-provider-annotation"
             version = libs.versions.lib.version.get()
             from(components["kotlin"])
         }
