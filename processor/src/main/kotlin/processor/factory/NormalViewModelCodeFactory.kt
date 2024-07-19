@@ -6,12 +6,14 @@ internal fun generateNormalViewModelCodeFactory(
     viewModelName: String,
     file: KSFile,
 ) = """
-        package ${file.packageName.asString()}
+@file:Suppress("NOTHING_TO_INLINE")
 
-        import androidx.compose.runtime.Composable
-        import androidx.lifecycle.viewmodel.compose.viewModel
+package ${file.packageName.asString()}
 
-        @Composable
-        inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = viewModel()
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+@Composable
+inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = viewModel()
 
 """.trimIndent()

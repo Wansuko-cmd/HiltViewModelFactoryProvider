@@ -15,51 +15,50 @@ internal fun generateAssistedViewModelCodeFactory(
     val assistedParameter = parameter.map { AssistedParameter.create(it) }
 
     return """
-            package ${file.packageName.asString()}
+@file:Suppress("NOTHING_TO_INLINE")
 
-            import android.app.Activity
-            import androidx.compose.runtime.Composable
-            import androidx.compose.ui.platform.LocalContext
-            import androidx.lifecycle.ViewModel
-            import androidx.lifecycle.ViewModelProvider
-            import androidx.lifecycle.viewmodel.compose.viewModel
-            import dagger.assisted.Assisted
-            import dagger.assisted.AssistedFactory
-            import dagger.hilt.EntryPoint
-            import dagger.hilt.InstallIn
-            import dagger.hilt.android.EntryPointAccessors
-            import dagger.hilt.android.components.ActivityComponent
+package ${file.packageName.asString()}
 
-            @Composable
-            fun ${viewModelName.replaceFirstChar { it.lowercase() }}(${assistedParameter.toArgument()}): $viewModelName {
-                val factory = EntryPointAccessors.fromActivity(
-                    LocalContext.current as Activity,
-                    ${viewModelName}FactoryProvider::class.java,
-                ).assistedViewModelFactory()
-                return viewModel(factory = provideFactory(factory, ${assistedParameter.toName()}))
-            }
+import android.app.Activity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
 
-            @EntryPoint
-            @InstallIn(ActivityComponent::class)
-            interface ${viewModelName}FactoryProvider {
-                fun assistedViewModelFactory(): ${viewModelName}AssistedFactory
-            }
-
-            @AssistedFactory
-            interface ${viewModelName}AssistedFactory {
-                fun create(
-                    ${assistedParameter.toArgumentWithAssisted()},
-                ): $viewModelName
-            }
-
+@Composable
+inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(${assistedParameter.toArgument()}): $viewModelName {
+    val assistedViewModelFactory = EntryPointAccessors.fromActivity(
+        activity = LocalContext.current as Activity,
+        entryPoint = ${viewModelName}FactoryProvider::class.java,
+    ).assistedViewModelFactory()
+    return viewModel(
+        factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            private fun provideFactory(
-                assistedFactory: ${viewModelName}AssistedFactory,
-                ${assistedParameter.toArgument()},
-            ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                    assistedFactory.create(${assistedParameter.toName()}) as T
-            }
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                assistedViewModelFactory.create(${assistedParameter.toName()}) as T
+        }
+    )
+}
+
+@EntryPoint
+@InstallIn(ActivityComponent::class)
+interface ${viewModelName}FactoryProvider {
+    fun assistedViewModelFactory(): ${viewModelName}AssistedFactory
+}
+
+@AssistedFactory
+interface ${viewModelName}AssistedFactory {
+    fun create(
+        ${assistedParameter.toArgumentWithAssisted()},
+    ): $viewModelName
+}
 
     """.trimIndent()
 }
