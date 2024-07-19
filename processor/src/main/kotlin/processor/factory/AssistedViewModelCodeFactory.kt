@@ -82,7 +82,8 @@ private data class AssistedParameter(
             .joinToString(", ") { "${it.name}: ${it.type}" }
 
         fun List<AssistedParameter>.toArgumentWithAssisted() = this
-            .joinToString(", ") { "@Assisted(\"${it.value}\") ${it.name}: ${it.type}" }
+            .joinToString(", ") { (value, name, type) ->
+                "@Assisted${if (value.isNotBlank()) "(\"$value\")" else ""} $name: $type" }
 
         fun List<AssistedParameter>.toName() = this
             .joinToString(", ") { it.name }

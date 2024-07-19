@@ -7,6 +7,6 @@ import dagger.assisted.AssistedInject
 
 @AnnotateViewModelFactory
 class AssistedViewModel @AssistedInject constructor(
-    @Assisted("text") val text: String,
-    @Assisted("num") val num: Int,
+    @Assisted val text: String,
+    @Assisted("foo") val num: Int,
 ) : ViewModel()
