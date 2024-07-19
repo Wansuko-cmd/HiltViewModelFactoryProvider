@@ -14,8 +14,8 @@ class NormalViewModel @Inject constructor() : ViewModel() {
 
 @AnnotateViewModelFactory
 class AssistedViewModel @AssistedInject constructor(
-    @Assisted("text") val text: String,
-    @Assisted("foo") val boo: Int,
+    @Assisted val text: String,
+    @Assisted("foo") val num: Int,
 ) : ViewModel()
 ```
 
@@ -27,11 +27,11 @@ class SampleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val normalViewModel = normalViewModel() // 自動生成
-            val assistedViewModel = assistedViewModel(text = "Assisted", boo = 2) // 自動生成
+            val assistedViewModel = assistedViewModel(text = "Assisted", num = 2) // 自動生成
 
             Column {
                 Text(normalViewModel.text)
-                Text(assistedViewModel.text + assistedViewModel.boo)
+                Text(assistedViewModel.text + assistedViewModel.num)
             }
         }
     }
@@ -96,7 +96,7 @@ interface AssistedViewModelFactoryProvider {
 @AssistedFactory
 interface AssistedViewModelAssistedFactory {
     fun create(
-        @Assisted("text") text: String, @Assisted("num") num: Int,
+        @Assisted text: String, @Assisted("foo") num: Int,
     ): AssistedViewModel
 }
 
