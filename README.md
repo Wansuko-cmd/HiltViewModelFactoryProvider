@@ -5,9 +5,8 @@ Composeで使える、@Assistedに対応したViewModelFactoryを作成してく
 
 `SampleViewModel.kt`
 ```kotlin
-@HiltViewModel
 @AnnotateViewModelFactory
-class NormalViewModel @Inject constructor() : ViewModel() {
+internal class NormalViewModel @Inject constructor() : ViewModel() {
     val text = "Normal"
 }
 
@@ -50,7 +49,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-inline fun normalViewModel(): NormalViewModel = viewModel()
+internal inline fun normalViewModel(): NormalViewModel = viewModel()
 ```
 
 `AssistedViewModelFactoryProvider.kt`

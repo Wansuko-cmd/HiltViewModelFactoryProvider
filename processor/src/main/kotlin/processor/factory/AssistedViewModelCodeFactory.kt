@@ -11,6 +11,7 @@ internal fun generateAssistedViewModelCodeFactory(
     viewModelName: String,
     file: KSFile,
     parameter: List<KSValueParameter>,
+    accessScope: String,
 ): String {
     val assistedParameter = parameter.map { AssistedParameter.create(it) }
 
@@ -33,7 +34,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
 
 @Composable
-inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(${assistedParameter.toArgument()}): $viewModelName {
+$accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(${assistedParameter.toArgument()}): $viewModelName {
     val assistedViewModelFactory = EntryPointAccessors.fromActivity(
         activity = LocalContext.current as Activity,
         entryPoint = ${viewModelName}FactoryProvider::class.java,

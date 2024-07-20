@@ -5,6 +5,7 @@ import com.google.devtools.ksp.symbol.KSFile
 internal fun generateNormalViewModelCodeFactory(
     viewModelName: String,
     file: KSFile,
+    accessScope: String,
 ) = """
 @file:Suppress("NOTHING_TO_INLINE")
 
@@ -14,6 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = viewModel()
+$accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = viewModel()
 
 """.trimIndent()
