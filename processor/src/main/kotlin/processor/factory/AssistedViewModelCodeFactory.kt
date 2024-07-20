@@ -50,12 +50,12 @@ $accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(${a
 
 @EntryPoint
 @InstallIn(ActivityComponent::class)
-interface ${viewModelName}FactoryProvider {
+$accessScope interface ${viewModelName}FactoryProvider {
     fun assistedViewModelFactory(): ${viewModelName}AssistedFactory
 }
 
 @AssistedFactory
-interface ${viewModelName}AssistedFactory {
+$accessScope interface ${viewModelName}AssistedFactory {
     fun create(
         ${assistedParameter.toArgumentWithAssisted()},
     ): $viewModelName

@@ -12,9 +12,9 @@ internal fun generateNormalViewModelCodeFactory(
 package ${file.packageName.asString()}
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-$accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = viewModel()
+$accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = hiltViewModel()
 
 """.trimIndent()

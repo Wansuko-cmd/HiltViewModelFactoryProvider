@@ -49,7 +49,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-internal inline fun normalViewModel(): NormalViewModel = viewModel()
+internal inline fun normalViewModel(): NormalViewModel = hiltViewModel()
 ```
 
 `AssistedViewModelFactoryProvider.kt`
@@ -72,7 +72,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
 
 @Composable
-inline fun assistedViewModel(text: String, num: Int): AssistedViewModel {
+public inline fun assistedViewModel(text: String, num: Int): AssistedViewModel {
     val assistedViewModelFactory = EntryPointAccessors.fromActivity(
         activity = LocalContext.current as Activity,
         entryPoint = AssistedViewModelFactoryProvider::class.java,
@@ -88,12 +88,12 @@ inline fun assistedViewModel(text: String, num: Int): AssistedViewModel {
 
 @EntryPoint
 @InstallIn(ActivityComponent::class)
-interface AssistedViewModelFactoryProvider {
+public interface AssistedViewModelFactoryProvider {
     fun assistedViewModelFactory(): AssistedViewModelAssistedFactory
 }
 
 @AssistedFactory
-interface AssistedViewModelAssistedFactory {
+public interface AssistedViewModelAssistedFactory {
     fun create(
         @Assisted text: String, @Assisted("foo") num: Int,
     ): AssistedViewModel
