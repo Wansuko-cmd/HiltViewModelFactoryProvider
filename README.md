@@ -132,3 +132,51 @@ public interface AssistedViewModelAssistedFactory {
 }
 
 ```
+
+## FAQ
+
+### hiltViewModelとの違い
+
+1. 可読性の向上
+
+それぞれのViewModelごとに専用の関数を用意するため、IDEなしの環境でもどのViewModelが代入されるか分かりやすい
+
+```kotlin
+// hiltViewModel
+FooScreen(viewModel = hiltViewModel())
+
+// HiltViewwModelFactoryProvider
+FooScreen(viewModel = fooViewModel())
+```
+
+2. Assistedを利用する際に書くコード量が減る
+
+hiltViewModelの場合Factoryを用意する必要があるが、本ライブラリでは`@HVMGenerator`アノテーションを付けることで内部で自動的に生成される
+
+3. 自由度
+
+引数にfactoryを渡せるhiltViewModelに対して、内部でfactoryを生成する本ライブラリの方が自由度は低い
+また、現状本ライブラリはViewModelStoreOwnerの引き渡しに対応していない（LocalViewModelStoreOwenrの値を見る）
+
+### 生成されるコードでhiltViewModelを使わない理由
+
+1. 複数のアノテーションが付く
+
+`hiltViewModel()`では`@HiltViewModel`が付けられたViewModelをDIしてくれるため、以下のようなコードになる
+
+```kotlin
+@HVMGenerator
+@HiltViewModel
+FooViewModel : ViewModel()
+```
+
+※ 責務の分割を行うため等でこの書き方を採用するのも断然アリだと思う
+
+2. Assistedの方では`@HiltViewModel`を利用することが出来ない
+
+  - `@HiltViewModel`の引数に利用するFactoryを指定する必要がある
+    - そのためにはコードの編集を行う必要がある（kspでは不可能）
+    - 安定しないメタプログラミングを行う必要が想定される
+  - Assistedを使う場合は`@HiltViewModel`を付けずに、Assistedを使わない場合は`@HiltViewModel`を付ける・・・という仕様にはあまりしたくない
+
+以上の二点（特に2）からhiltViewModelの採用を見送った。
