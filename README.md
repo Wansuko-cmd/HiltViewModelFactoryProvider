@@ -104,7 +104,7 @@ import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
 
 @Composable
-public inline fun assistedViewModel(text: String, num: Int): AssistedViewModel {
+public inline fun assistedViewModel(text: kotlin.String, num: kotlin.Int): AssistedViewModel {
     val assistedViewModelFactory = EntryPointAccessors.fromActivity(
         activity = LocalContext.current as Activity,
         entryPoint = AssistedViewModelFactoryProvider::class.java,
@@ -127,7 +127,7 @@ public interface AssistedViewModelFactoryProvider {
 @AssistedFactory
 public interface AssistedViewModelAssistedFactory {
     fun create(
-        @Assisted text: String, @Assisted("foo") num: Int,
+        @Assisted text: kotlin.String, @Assisted("foo") num: kotlin.Int,
     ): AssistedViewModel
 }
 

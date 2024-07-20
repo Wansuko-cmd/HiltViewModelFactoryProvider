@@ -5,6 +5,7 @@ import com.google.devtools.ksp.isPrivate
 import com.google.devtools.ksp.isProtected
 import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueParameter
 import processor.ext.isAssisted
 
@@ -52,7 +53,7 @@ sealed interface VMParameter {
     companion object {
         fun create(parameter: KSValueParameter): VMParameter {
             val name = parameter.name!!.getShortName()
-            val type = parameter.type.toString()
+            val type = parameter.type.asString()
             return if (parameter.annotations.any { it.isAssisted() }) {
                 val value =
                     parameter
@@ -68,3 +69,23 @@ sealed interface VMParameter {
         }
     }
 }
+
+private fun KSTypeReference.asString(): String {
+    val type = resolve()
+    return when {
+        type.isFunctionType -> {
+            val arguments = type.arguments.map { it.type!!.asString() }
+            val args = arguments.dropLast(1).joinToString()
+            val returnValue = arguments.last()
+            "($args) -> $returnValue"
+        }
+        type.isSuspendFunctionType -> {
+            val arguments = type.arguments.map { it.type!!.asString() }
+            val args = arguments.dropLast(1).joinToString()
+            val returnValue = arguments.last()
+            "($args) -> $returnValue"
+        }
+        else -> type.declaration.qualifiedName!!.asString()
+    }
+}
+
