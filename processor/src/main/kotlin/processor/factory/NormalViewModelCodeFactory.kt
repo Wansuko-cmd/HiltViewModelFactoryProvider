@@ -1,20 +1,32 @@
 package processor.factory
 
-import com.google.devtools.ksp.symbol.KSFile
+internal fun generateNormalViewModelCodeFactory(args: HVMGeneratorArgs): String =
+    buildString {
+        appendLine("@file:Suppress(\"NOTHING_TO_INLINE\")")
+        appendLine()
+        appendLine("package ${args.packageName}")
+        appendLine()
+        appendImports()
+        appendLine()
+        appendHVMGeneratorFunction(args = args)
+    }
 
-internal fun generateNormalViewModelCodeFactory(
-    viewModelName: String,
-    file: KSFile,
-    accessScope: String,
-) = """
-@file:Suppress("NOTHING_TO_INLINE")
 
-package ${file.packageName.asString()}
+private fun StringBuilder.appendImports() =
+    """
+    import androidx.compose.runtime.Composable
+    import androidx.hilt.navigation.compose.hiltViewModel
+    """.trimIndent().also {
+        appendLine(it)
+    }
 
-import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
-
-@Composable
-$accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(): $viewModelName = hiltViewModel()
-
-""".trimIndent()
+private fun StringBuilder.appendHVMGeneratorFunction(args: HVMGeneratorArgs) {
+    val viewModelName = args.viewModelName
+    val functionName = viewModelName.replaceFirstChar { it.lowercase() }
+    """
+    @Composable
+    ${args.accessScope} inline fun $functionName(): $viewModelName = hiltViewModel()
+    """.trimIndent().also {
+        appendLine(it)
+    }
+}

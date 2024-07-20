@@ -13,7 +13,6 @@ internal fun generateAssistedViewModelCodeFactory(args: HVMGeneratorArgs): Strin
         appendFactoryProvider(args = args)
         appendLine()
         appendFactory(args = args)
-        appendLine()
     }
 
 private fun StringBuilder.appendImports() =
