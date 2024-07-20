@@ -37,35 +37,33 @@ sealed interface VMParameter {
     // $name: $type = $value
     val name: String
     val type: String
-    val value: String
 
     data class Assisted(
         override val name: String,
         override val type: String,
-        override val value: String,
+        val value: String,
     ) : VMParameter
 
     data class Normal(
         override val name: String,
         override val type: String,
-        override val value: String,
     ) : VMParameter
 
     companion object {
         fun create(parameter: KSValueParameter): VMParameter {
             val name = parameter.name!!.getShortName()
             val type = parameter.type.toString()
-            val value =
-                parameter
-                    .annotations
-                    .first { it.isAssisted() }
-                    .arguments[0]
-                    .value
-                    .toString()
             return if (parameter.annotations.any { it.isAssisted() }) {
+                val value =
+                    parameter
+                        .annotations
+                        .first { it.isAssisted() }
+                        .arguments[0]
+                        .value
+                        .toString()
                 Assisted(name, type, value)
             } else {
-                Normal(name, type, value)
+                Normal(name, type)
             }
         }
     }
