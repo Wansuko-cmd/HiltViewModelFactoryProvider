@@ -45,11 +45,43 @@ class SampleActivity : ComponentActivity() {
 
 package view.model.package.place
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
+import javax.inject.Inject
 
 @Composable
-internal inline fun normalViewModel(): NormalViewModel = hiltViewModel()
+internal inline fun normalViewModel(): NormalViewModel {
+    val viewModelFactory = EntryPointAccessors.fromActivity(
+        activity = LocalContext.current as Activity,
+        entryPoint = NormalViewModelFactoryProvider::class.java,
+    ).viewModelFactory()
+    return viewModel(
+        factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                viewModelFactory.create() as T
+        }
+    )
+}
+
+@EntryPoint
+@InstallIn(ActivityComponent::class)
+internal interface NormalViewModelFactoryProvider {
+    fun viewModelFactory(): NormalViewModelFactory
+}
+
+internal class NormalViewModelFactory @Inject constructor() {
+    fun create(): NormalViewModel = NormalViewModel()
+}
+
 ```
 
 `AssistedViewModelFactoryProvider.kt`
