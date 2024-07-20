@@ -5,13 +5,13 @@ Composeで使える、@Assistedに対応したViewModelFactoryを作成してく
 
 `SampleViewModel.kt`
 ```kotlin
-@HVMWithGenerator
+@HVMGenerator
 internal class NormalViewModel @Inject constructor() : ViewModel() {
     val text = "Normal"
 }
 
 
-@HVMWithGenerator
+@HVMGenerator
 class AssistedViewModel @AssistedInject constructor(
     @Assisted val text: String,
     @Assisted("foo") val num: Int,

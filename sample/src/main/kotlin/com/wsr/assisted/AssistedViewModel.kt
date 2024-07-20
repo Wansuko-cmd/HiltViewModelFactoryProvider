@@ -1,11 +1,11 @@
 package com.wsr.assisted
 
 import androidx.lifecycle.ViewModel
-import annotation.HVMWithGenerator
+import annotation.HVMGenerator
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
-@HVMWithGenerator
+@HVMGenerator
 class AssistedViewModel @AssistedInject constructor(
     @Assisted val text: String,
     @Assisted("foo") val num: Int,

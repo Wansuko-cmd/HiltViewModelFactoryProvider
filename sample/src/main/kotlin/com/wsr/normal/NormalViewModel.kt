@@ -1,10 +1,10 @@
 package com.wsr.normal
 
 import androidx.lifecycle.ViewModel
-import annotation.HVMWithGenerator
+import annotation.HVMGenerator
 import javax.inject.Inject
 
-@HVMWithGenerator
+@HVMGenerator
 internal class NormalViewModel @Inject constructor() : ViewModel() {
     val text = "Normal"
 }
