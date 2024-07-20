@@ -28,6 +28,6 @@ internal fun generateViewModelFactoryProvider(
     return if (parameter.isEmpty()) {
         generateNormalViewModelCodeFactory(viewModelName, file, accessScope)
     } else {
-        generateAssistedViewModelCodeFactory(viewModelName, file, parameter, accessScope)
+        generateAssistedViewModelCodeFactory(HVMGeneratorArgs(viewModel))
     }
 }

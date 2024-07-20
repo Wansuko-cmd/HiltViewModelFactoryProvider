@@ -1,92 +1,90 @@
 package processor.factory
 
-import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.KSValueParameter
-import processor.ext.isAssisted
-import processor.factory.AssistedParameter.Companion.toArgument
-import processor.factory.AssistedParameter.Companion.toArgumentWithAssisted
-import processor.factory.AssistedParameter.Companion.toName
+internal fun generateAssistedViewModelCodeFactory(args: HVMGeneratorArgs): String =
+    buildString {
+        appendLine("@file:Suppress(\"NOTHING_TO_INLINE\")")
+        appendLine()
+        appendLine("package ${args.packageName}")
+        appendLine()
+        appendImports()
+        appendLine()
+        appendHVMGeneratorFunction(args = args)
+        appendLine()
+        appendFactoryProvider(args = args)
+        appendLine()
+        appendFactory(args = args)
+        appendLine()
+    }
 
-internal fun generateAssistedViewModelCodeFactory(
-    viewModelName: String,
-    file: KSFile,
-    parameter: List<KSValueParameter>,
-    accessScope: String,
-): String {
-    val assistedParameter = parameter.map { AssistedParameter.create(it) }
+private fun StringBuilder.appendImports() =
+    """
+    import android.app.Activity
+    import androidx.compose.runtime.Composable
+    import androidx.compose.ui.platform.LocalContext
+    import androidx.lifecycle.ViewModel
+    import androidx.lifecycle.ViewModelProvider
+    import androidx.lifecycle.viewmodel.compose.viewModel
+    import dagger.assisted.Assisted
+    import dagger.assisted.AssistedFactory
+    import dagger.hilt.EntryPoint
+    import dagger.hilt.InstallIn
+    import dagger.hilt.android.EntryPointAccessors
+    import dagger.hilt.android.components.ActivityComponent
+    """.trimIndent().also {
+        appendLine(it)
+    }
 
-    return """
-@file:Suppress("NOTHING_TO_INLINE")
-
-package ${file.packageName.asString()}
-
-import android.app.Activity
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ActivityComponent
-
-@Composable
-$accessScope inline fun ${viewModelName.replaceFirstChar { it.lowercase() }}(${assistedParameter.toArgument()}): $viewModelName {
-    val assistedViewModelFactory = EntryPointAccessors.fromActivity(
-        activity = LocalContext.current as Activity,
-        entryPoint = ${viewModelName}FactoryProvider::class.java,
-    ).assistedViewModelFactory()
-    return viewModel(
-        factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T =
-                assistedViewModelFactory.create(${assistedParameter.toName()}) as T
-        }
-    )
-}
-
-@EntryPoint
-@InstallIn(ActivityComponent::class)
-$accessScope interface ${viewModelName}FactoryProvider {
-    fun assistedViewModelFactory(): ${viewModelName}AssistedFactory
-}
-
-@AssistedFactory
-$accessScope interface ${viewModelName}AssistedFactory {
-    fun create(
-        ${assistedParameter.toArgumentWithAssisted()},
-    ): $viewModelName
-}
-
-    """.trimIndent()
-}
-
-private data class AssistedParameter(
-    val value: String,
-    val name: String,
-    val type: String,
-) {
-    companion object {
-        fun create(parameter: KSValueParameter) = AssistedParameter(
-            value = parameter
-                .annotations
-                .first { it.isAssisted() }
-                .arguments[0].value.toString(),
-            name = parameter.name!!.getShortName(),
-            type = parameter.type.toString(),
+private fun StringBuilder.appendHVMGeneratorFunction(args: HVMGeneratorArgs) {
+    val viewModelName = args.viewModelName
+    val functionName = viewModelName.replaceFirstChar { it.lowercase() }
+    val assistedParameters = args.parameters.filterIsInstance<VMParameter.Assisted>()
+    val funcArguments = assistedParameters.joinToString(", ") { "${it.name}: ${it.type}" }
+    """
+    @Composable
+    ${args.accessScope} inline fun $functionName($funcArguments): $viewModelName {
+        val assistedViewModelFactory = EntryPointAccessors.fromActivity(
+            activity = LocalContext.current as Activity,
+            entryPoint = ${viewModelName}FactoryProvider::class.java,
+        ).assistedViewModelFactory()
+        return viewModel(
+            factory = object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                    assistedViewModelFactory.create(${assistedParameters.joinToString(", ") { it.name }}) as T
+            }
         )
+    }
+    """.trimIndent().also {
+        appendLine(it)
+    }
+}
 
-        fun List<AssistedParameter>.toArgument() = this
-            .joinToString(", ") { "${it.name}: ${it.type}" }
+private fun StringBuilder.appendFactoryProvider(args: HVMGeneratorArgs) =
+    """
+    @EntryPoint
+    @InstallIn(ActivityComponent::class)
+    ${args.accessScope} interface ${args.viewModelName}FactoryProvider {
+        fun assistedViewModelFactory(): ${args.viewModelName}AssistedFactory
+    }
+    """.trimIndent().also {
+        appendLine(it)
+    }
 
-        fun List<AssistedParameter>.toArgumentWithAssisted() = this
-            .joinToString(", ") { (value, name, type) ->
-                "@Assisted${if (value.isNotBlank()) "(\"$value\")" else ""} $name: $type" }
-
-        fun List<AssistedParameter>.toName() = this
-            .joinToString(", ") { it.name }
+private fun StringBuilder.appendFactory(args: HVMGeneratorArgs) {
+    val arguments =
+        args.parameters
+            .filterIsInstance<VMParameter.Assisted>()
+            .joinToString(", ") { (name, type, value) ->
+                "@Assisted${if (value.isNotBlank()) "(\"$value\")" else ""} $name: $type"
+            }
+    """
+    @AssistedFactory
+    ${args.accessScope} interface ${args.viewModelName}AssistedFactory {
+        fun create(
+            $arguments,
+        ): ${args.viewModelName}
+    }
+    """.trimIndent().also {
+        appendLine(it)
     }
 }
