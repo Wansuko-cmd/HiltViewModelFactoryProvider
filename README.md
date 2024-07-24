@@ -62,7 +62,7 @@ internal inline fun normalViewModel(): NormalViewModel {
     val viewModelFactory = EntryPointAccessors.fromActivity(
         activity = LocalContext.current as Activity,
         entryPoint = NormalViewModelFactoryProvider::class.java,
-    ).viewModelFactory()
+    ).normalViewModelFactory()
     return viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -75,7 +75,7 @@ internal inline fun normalViewModel(): NormalViewModel {
 @EntryPoint
 @InstallIn(ActivityComponent::class)
 internal interface NormalViewModelFactoryProvider {
-    fun viewModelFactory(): NormalViewModelFactory
+    fun normalViewModelFactory(): NormalViewModelFactory
 }
 
 internal class NormalViewModelFactory @Inject constructor() {
@@ -108,7 +108,7 @@ public inline fun assistedViewModel(text: kotlin.String, num: kotlin.Int): Assis
     val assistedViewModelFactory = EntryPointAccessors.fromActivity(
         activity = LocalContext.current as Activity,
         entryPoint = AssistedViewModelFactoryProvider::class.java,
-    ).assistedViewModelFactory()
+    ).assistedViewModelAssistedFactory()
     return viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -121,7 +121,7 @@ public inline fun assistedViewModel(text: kotlin.String, num: kotlin.Int): Assis
 @EntryPoint
 @InstallIn(ActivityComponent::class)
 public interface AssistedViewModelFactoryProvider {
-    fun assistedViewModelFactory(): AssistedViewModelAssistedFactory
+    fun assistedViewModelAssistedFactory(): AssistedViewModelAssistedFactory
 }
 
 @AssistedFactory

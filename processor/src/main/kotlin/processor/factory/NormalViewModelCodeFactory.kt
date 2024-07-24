@@ -42,7 +42,7 @@ private fun StringBuilder.appendHVMGeneratorFunction(args: HVMGeneratorArgs) {
         val viewModelFactory = EntryPointAccessors.fromActivity(
             activity = LocalContext.current as Activity,
             entryPoint = ${viewModelName}FactoryProvider::class.java,
-        ).viewModelFactory()
+        ).${functionName}Factory()
         return viewModel(
             factory = object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
@@ -56,16 +56,18 @@ private fun StringBuilder.appendHVMGeneratorFunction(args: HVMGeneratorArgs) {
     }
 }
 
-private fun StringBuilder.appendFactoryProvider(args: HVMGeneratorArgs) =
+private fun StringBuilder.appendFactoryProvider(args: HVMGeneratorArgs) {
+    val functionName = args.viewModelName.replaceFirstChar { it.lowercase() }
     """
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     ${args.accessScope} interface ${args.viewModelName}FactoryProvider {
-        fun viewModelFactory(): ${args.viewModelName}Factory
+        fun ${functionName}Factory(): ${args.viewModelName}Factory
     }
     """.trimIndent().also {
         appendLine(it)
     }
+}
 
 private fun StringBuilder.appendFactory(args: HVMGeneratorArgs) {
     val normalParameters = args.parameters.filterIsInstance<VMParameter.Normal>()
